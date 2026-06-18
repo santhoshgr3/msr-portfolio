@@ -1,4 +1,5 @@
 'use client';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import HorizontalPillars from '@/components/HorizontalPillars';
@@ -100,6 +101,18 @@ export default function MissionPage() {
   const t = i18n[lang].mission;
   const pillars = lang === 'te' ? pillarsTe : pillarsEn;
   const commonGoals = lang === 'te' ? commonGoalsTe : commonGoalsEn;
+  const [pillarImages, setPillarImages] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    fetch('/api/pillars')
+      .then(r => r.json())
+      .then((rows: { slug: string; image_url: string }[]) => {
+        const map: Record<string, string> = {};
+        rows.forEach(r => { if (r.image_url) map[r.slug] = r.image_url; });
+        setPillarImages(map);
+      })
+      .catch(() => {});
+  }, []);
 
   return (
     <div>
@@ -143,7 +156,7 @@ export default function MissionPage() {
       </section>
 
       {/* GSAP horizontal scroll pillars */}
-      <HorizontalPillars pillars={pillars} />
+      <HorizontalPillars pillars={pillars} images={pillarImages} />
 
       {/* Common Goals */}
       <section className="py-24 px-4 bg-[#0D0D0D]">

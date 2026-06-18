@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 
 type Section = { name: string; items: string[] };
 type Pillar = {
@@ -12,9 +13,12 @@ type Pillar = {
 
 interface Props {
   pillars: Pillar[];
+  images?: Record<string, string>;
 }
 
-export default function HorizontalPillars({ pillars }: Props) {
+const slugs = ['youth', 'women', 'healthcare', 'education'];
+
+export default function HorizontalPillars({ pillars, images = {} }: Props) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const stripRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -81,7 +85,14 @@ export default function HorizontalPillars({ pillars }: Props) {
               <div className="font-mono text-white/20 text-xs tracking-[0.3em] mb-4">
                 {String(pi + 1).padStart(2, '0')} / {String(pillars.length).padStart(2, '0')}
               </div>
-              <div className="text-5xl mb-4">{pillar.emoji}</div>
+              {images[slugs[pi]] ? (
+                <div className="relative w-full aspect-video rounded-2xl overflow-hidden mb-4">
+                  <Image src={images[slugs[pi]]} alt={pillar.title} fill className="object-cover" sizes="100vw" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                </div>
+              ) : (
+                <div className="text-5xl mb-4">{pillar.emoji}</div>
+              )}
               <div
                 className="w-10 h-1 rounded mb-4"
                 style={{ backgroundColor: pillar.color, transform: 'skewX(-12deg)' }}
@@ -237,7 +248,14 @@ export default function HorizontalPillars({ pillars }: Props) {
                 <div className="font-mono text-white/15 text-[11px] tracking-[0.4em] mb-8">
                   {String(pi + 1).padStart(2, '0')} / {String(pillars.length).padStart(2, '0')}
                 </div>
-                <div className="text-5xl xl:text-6xl mb-6 select-none">{pillar.emoji}</div>
+                {images[slugs[pi]] ? (
+                  <div className="relative w-full aspect-video rounded-2xl overflow-hidden mb-6">
+                    <Image src={images[slugs[pi]]} alt={pillar.title} fill className="object-cover" sizes="40vw" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                  </div>
+                ) : (
+                  <div className="text-5xl xl:text-6xl mb-6 select-none">{pillar.emoji}</div>
+                )}
                 <div
                   className="w-12 h-[3px] mb-6"
                   style={{

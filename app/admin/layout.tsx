@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import {
   Lock, LayoutDashboard, Users, FileText, Calendar,
   Image, BarChart3, MessageSquare, Mail, LogOut,
-  UserSquare2, Tv2, Settings, Menu, X,
+  UserSquare2, Tv2, Settings, Menu, X, Layers,
 } from 'lucide-react';
 
 const ADMIN_PASS = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'sunnyannaadmin2025';
@@ -19,6 +19,7 @@ const NAV = [
   { href: '/admin/stats',         label: 'Statistics',     icon: BarChart3 },
   { href: '/admin/testimonials',  label: 'Testimonials',   icon: MessageSquare },
   { href: '/admin/about',         label: 'About Content',  icon: UserSquare2 },
+  { href: '/admin/pillars',        label: 'Pillar Images',  icon: Layers },
   { href: '/admin/media-content', label: 'Media Content',  icon: Tv2 },
   { href: '/admin/settings',      label: 'Site Settings',  icon: Settings },
   { href: '/admin/contact',       label: 'Contact Inbox',  icon: Mail },
