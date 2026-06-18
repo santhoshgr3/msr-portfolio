@@ -1,8 +1,10 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Save, Eye } from 'lucide-react';
+import Image from 'next/image';
+import { ArrowLeft, Save, Eye, Upload, X, Loader } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
 
 const CATEGORIES = ['General', 'Education', 'Events', 'Cultural', 'Community', 'Women Empowerment', 'Youth', 'Milestones', 'Spiritual'];
 
@@ -23,6 +25,26 @@ export default function EditBlogPost() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [preview, setPreview] = useState(false);
+  const [imgUploading, setImgUploading] = useState(false);
+  const [imgError, setImgError] = useState('');
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const uploadImage = async (file: File) => {
+    setImgUploading(true);
+    setImgError('');
+    try {
+      const ext = file.name.split('.').pop();
+      const path = `blog-${Date.now()}.${ext}`;
+      const { error: upErr } = await supabase.storage.from('blog-images').upload(path, file, { upsert: true });
+      if (upErr) throw upErr;
+      const { data: { publicUrl } } = supabase.storage.from('blog-images').getPublicUrl(path);
+      set('image_url', publicUrl);
+    } catch {
+      setImgError('Upload failed. Try again.');
+    } finally {
+      setImgUploading(false);
+    }
+  };
 
   useEffect(() => {
     fetch(`/api/blog/${id}`, { headers: adminHeaders() })
@@ -112,8 +134,42 @@ export default function EditBlogPost() {
           <textarea value={form.excerpt} onChange={e => set('excerpt', e.target.value)} rows={2} className="input-field resize-none" />
         </div>
         <div>
-          <label className="label-field">Cover Image URL</label>
-          <input value={form.image_url} onChange={e => set('image_url', e.target.value)} placeholder="https://..." className="input-field" />
+          <label className="label-field">Cover Image</label>
+          <input ref={fileRef} type="file" accept="image/*" className="hidden"
+            onChange={e => { const f = e.target.files?.[0]; if (f) uploadImage(f); }} />
+          {form.image_url ? (
+            <div className="relative rounded-xl overflow-hidden border border-[#E8E8E8] aspect-video w-full">
+              <Image src={form.image_url} alt="Cover" fill className="object-cover" sizes="800px" />
+              <button
+                type="button"
+                onClick={() => set('image_url', '')}
+                className="absolute top-2 right-2 bg-black/60 hover:bg-red-600 text-white rounded-full p-1 transition-colors"
+              >
+                <X size={14} />
+              </button>
+              <button
+                type="button"
+                onClick={() => fileRef.current?.click()}
+                className="absolute bottom-2 right-2 flex items-center gap-1.5 bg-black/60 hover:bg-[#FF6F00] text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors"
+              >
+                <Upload size={12} /> Replace
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => fileRef.current?.click()}
+              disabled={imgUploading}
+              className="w-full border-2 border-dashed border-[#E8E8E8] hover:border-[#FF6F00] rounded-xl py-8 flex flex-col items-center gap-2 text-[#6B6B6B] hover:text-[#FF6F00] transition-colors disabled:opacity-50"
+            >
+              {imgUploading ? <Loader size={22} className="animate-spin" /> : <Upload size={22} />}
+              <span className="text-sm font-semibold">{imgUploading ? 'Uploading…' : 'Click to upload cover image'}</span>
+              <span className="text-xs">JPG, PNG, WebP — max 5 MB</span>
+            </button>
+          )}
+          {imgError && <p className="text-red-500 text-xs mt-1">{imgError}</p>}
+          <input value={form.image_url} onChange={e => set('image_url', e.target.value)}
+            placeholder="Or paste an image URL…" className="input-field mt-2" />
         </div>
         <div>
           <div className="flex items-center justify-between mb-1.5">
