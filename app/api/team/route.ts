@@ -12,7 +12,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  if (req.headers.get('x-admin-token') !== 'sunnyannaadmin2025')
+  if (req.headers.get('x-admin-token') !== process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'sunnyannaadmin2025')
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const body = await req.json();
   const { data, error } = await supabaseAdmin

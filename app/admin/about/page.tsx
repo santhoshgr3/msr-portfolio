@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 
-const TOKEN = 'sunnyannaadmin2025';
+const TOKEN = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'sunnyannaadmin2025';
 const H = { 'Content-Type': 'application/json', 'x-admin-token': TOKEN };
 
 type TimelineItem = { id: number; year: string; title: string; description: string; highlight: boolean; order_num: number };

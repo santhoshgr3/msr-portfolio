@@ -5,7 +5,7 @@ import { DEFAULT_SETTINGS } from '@/lib/supabase';
 
 export const dynamic = 'force-dynamic';
 
-const ADMIN_PASS = 'sunnyannaadmin2025';
+const ADMIN_PASS = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'sunnyannaadmin2025';
 
 const EDITABLE_FIELDS = [
   'phone', 'whatsapp_number', 'email', 'website', 'address',

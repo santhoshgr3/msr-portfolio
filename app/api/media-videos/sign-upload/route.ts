@@ -3,7 +3,7 @@ import { supabaseAdmin } from '@/lib/supabase-admin';
 
 export const dynamic = 'force-dynamic';
 
-const ADMIN_PASS = 'sunnyannaadmin2025';
+const ADMIN_PASS = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'sunnyannaadmin2025';
 
 // Returns a short-lived signed URL the admin browser can upload a video file to
 // directly — this avoids the serverless function body-size limit for large files.

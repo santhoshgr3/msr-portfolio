@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 
-const TOKEN = 'sunnyannaadmin2025';
+const TOKEN = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'sunnyannaadmin2025';
 const H = { 'Content-Type': 'application/json', 'x-admin-token': TOKEN };
 
 type Video = { id: number; title: string; url: string; video_url: string; duration: string; views: string };

@@ -8,7 +8,7 @@ import {
   UserSquare2, Tv2, Settings, Menu, X,
 } from 'lucide-react';
 
-const ADMIN_PASS = 'sunnyannaadmin2025';
+const ADMIN_PASS = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'sunnyannaadmin2025';
 
 const NAV = [
   { href: '/admin',               label: 'Overview',       icon: LayoutDashboard, exact: true },

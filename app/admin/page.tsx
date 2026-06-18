@@ -5,7 +5,7 @@ import { Users, FileText, Calendar, Image, BarChart3, MessageSquare, Mail, Arrow
 
 type Stats = { members: number; lives_impacted: number; events: number; social_followers: number; years_service: number; districts_covered: number };
 
-const ADMIN_PASS = 'sunnyannaadmin2025';
+const ADMIN_PASS = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'sunnyannaadmin2025';
 
 export default function AdminOverview() {
   const [stats, setStats] = useState<Stats | null>(null);

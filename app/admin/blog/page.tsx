@@ -8,7 +8,7 @@ type BlogPost = {
   category: string; author: string; published_at: string | null;
 };
 
-const ADMIN_PASS = 'sunnyannaadmin2025';
+const ADMIN_PASS = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'sunnyannaadmin2025';
 const adminHeaders = () => ({
   'Content-Type': 'application/json',
   'x-admin-token': typeof window !== 'undefined' ? localStorage.getItem('admin_token') || '' : '',

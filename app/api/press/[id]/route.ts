@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase-admin';
 
 function auth(req: NextRequest) {
-  return req.headers.get('x-admin-token') === 'sunnyannaadmin2025';
+  return req.headers.get('x-admin-token') === process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'sunnyannaadmin2025';
 }
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {

@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Save, Phone, Mail, Globe, MapPin, Camera, Play, Share2, AtSign, Send, MessageCircle, Briefcase } from 'lucide-react';
 import { DEFAULT_SETTINGS, type SiteSettings } from '@/lib/supabase';
 
-const TOKEN = 'sunnyannaadmin2025';
+const TOKEN = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'sunnyannaadmin2025';
 
 type FieldDef = { key: keyof SiteSettings; label: string; placeholder: string; icon: React.ReactNode };
 
