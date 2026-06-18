@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Phone, Mail, Globe } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -69,13 +70,15 @@ export default function AboutPage() {
         <div className="max-w-6xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="relative">
-              <div className="aspect-[4/5] max-w-md mx-auto rounded-3xl bg-[#F5F5F5] flex items-center justify-center border border-[#E8E8E8]">
-                <div className="text-center text-[#6B6B6B]">
-                  <div className="w-20 h-20 rounded-full bg-[#E8E8E8] mx-auto mb-3 flex items-center justify-center">
-                    <span className="text-3xl font-black text-[#0D0D0D]">S</span>
-                  </div>
-                  <p className="text-sm">[ Portrait photo of Dr. Madhiraj ]</p>
-                </div>
+              <div className="aspect-[4/5] max-w-md mx-auto rounded-3xl overflow-hidden relative shadow-2xl">
+                <Image
+                  src="/sunny-anna-about.jpg"
+                  alt="Dr. Madhiraj Sairathan"
+                  fill
+                  className="object-cover object-top"
+                  sizes="(max-width: 768px) 90vw, 420px"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
               </div>
               <div className="absolute -bottom-4 -right-4 w-28 h-28 rounded-2xl bg-[#FF6F00]/10 -z-10" />
             </div>
