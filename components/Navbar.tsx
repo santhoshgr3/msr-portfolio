@@ -66,7 +66,7 @@ export default function Navbar() {
         <div className="fixed top-0 left-0 right-0 z-[60] bg-[#FF6F00] text-white text-xs font-semibold flex items-center justify-between px-4 py-2">
           <div className="flex items-center gap-2 flex-1 justify-center">
             <span className="pulse-live w-1.5 h-1.5 rounded-full bg-white inline-block" />
-            <span className="hidden sm:inline">{t.announcement}</span>
+            <span className="hidden sm:inline">{s.announcement_text || t.announcement}</span>
             <Link href="/community/join" className="underline underline-offset-2 hover:no-underline font-bold">
               {t.joinNow}
             </Link>
@@ -95,20 +95,17 @@ export default function Navbar() {
           <div className="flex items-center justify-between gap-4">
 
             {/* ── Logo ── */}
-            <Link href="/" className="flex items-center gap-3 group shrink-0">
-              <div className="relative w-9 h-9 shrink-0">
-                <div className="absolute inset-0 rounded-xl bg-[#FF6F00] group-hover:scale-110 transition-transform duration-300" />
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-[3px]">
-                  <div className="w-4 h-[2px] bg-white" style={{ transform: 'skewX(-12deg) translateX(2px)' }} />
-                  <div className="w-5 h-[2px] bg-white/70" style={{ transform: 'skewX(-12deg)' }} />
-                  <div className="w-3 h-[2px] bg-white/40" style={{ transform: 'skewX(-12deg) translateX(-2px)' }} />
-                </div>
+            <Link href="/" className="flex items-center gap-2.5 group shrink-0">
+              <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 group-hover:scale-110 ${
+                transparent ? 'bg-white/20 border border-white/30' : 'bg-[#FF6F00]'
+              }`}>
+                <span className={`font-black text-base leading-none ${transparent ? 'text-white' : 'text-white'}`}>M</span>
               </div>
-              <div className="hidden sm:block leading-tight whitespace-nowrap">
-                <div className={`font-black text-[13px] tracking-tight transition-colors duration-300 ${transparent ? 'text-white' : 'text-[#0D0D0D]'}`}>
+              <div className="leading-tight whitespace-nowrap">
+                <div className={`font-black text-[14px] tracking-tight transition-colors duration-300 ${transparent ? 'text-white' : 'text-[#0D0D0D]'}`}>
                   Dr. Madhiraj Sairathan
                 </div>
-                <div className="text-[#FF6F00] text-[9px] font-bold uppercase tracking-[0.12em]">
+                <div className="text-[#FF6F00] text-[9px] font-bold uppercase tracking-[0.15em]">
                   Empowering · Transforming
                 </div>
               </div>
@@ -240,18 +237,8 @@ export default function Navbar() {
       >
         {/* Drawer header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-[#E8E8E8]">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-[#FF6F00] flex items-center justify-center">
-              <div className="flex flex-col items-center gap-[2px]">
-                <div className="w-3.5 h-[2px] bg-white" style={{ transform: 'skewX(-12deg)' }} />
-                <div className="w-4 h-[2px] bg-white/70" style={{ transform: 'skewX(-12deg)' }} />
-              </div>
-            </div>
-            <div>
-              <div className="font-black text-[12px] text-[#0D0D0D]">Dr. Madhiraj Sairathan</div>
-              <div className="text-[#FF6F00] text-[9px] font-bold uppercase tracking-widest">Bhupalpally · Telangana</div>
-            </div>
-          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo.png" alt="Madhiraj Sairathan" style={{ height: '40px', width: 'auto' }} />
           <button
             onClick={() => setOpen(false)}
             className="w-8 h-8 rounded-lg bg-[#F5F5F5] hover:bg-[#E8E8E8] flex items-center justify-center transition-colors"

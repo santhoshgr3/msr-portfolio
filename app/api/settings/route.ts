@@ -1,17 +1,17 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
+import { isAdmin } from '@/lib/admin-auth';
 import { supabase } from '@/lib/supabase';
 import { supabaseAdmin } from '@/lib/supabase-admin';
 import { DEFAULT_SETTINGS } from '@/lib/supabase';
 
 export const dynamic = 'force-dynamic';
 
-const ADMIN_PASS = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'sunnyannaadmin2025';
 
 const EDITABLE_FIELDS = [
   'phone', 'whatsapp_number', 'email', 'website', 'address',
   'instagram_url', 'instagram_handle', 'youtube_url', 'youtube_handle',
   'facebook_url', 'twitter_url', 'telegram_url', 'linkedin_url',
-  'whatsapp_community_url',
+  'whatsapp_community_url', 'announcement_text',
 ] as const;
 
 export async function GET() {
@@ -22,7 +22,7 @@ export async function GET() {
 }
 
 export async function PUT(req: NextRequest) {
-  if (req.headers.get('x-admin-token') !== ADMIN_PASS)
+  if (!isAdmin(req))
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const body = await req.json();

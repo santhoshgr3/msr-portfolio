@@ -1,14 +1,14 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
+import { isAdmin } from '@/lib/admin-auth';
 import { supabaseAdmin } from '@/lib/supabase-admin';
 
 export const dynamic = 'force-dynamic';
 
-const ADMIN_PASS = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'sunnyannaadmin2025';
 
 // Returns a short-lived signed URL the admin browser can upload a video file to
 // directly — this avoids the serverless function body-size limit for large files.
 export async function POST(req: NextRequest) {
-  if (req.headers.get('x-admin-token') !== ADMIN_PASS)
+  if (!isAdmin(req))
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const { filename, contentType } = await req.json();

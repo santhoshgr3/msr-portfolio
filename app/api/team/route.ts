@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
+import { isAdmin } from '@/lib/admin-auth';
 import { supabase } from '@/lib/supabase';
 import { supabaseAdmin } from '@/lib/supabase-admin';
 
@@ -12,7 +13,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  if (req.headers.get('x-admin-token') !== process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'sunnyannaadmin2025')
+  if (!isAdmin(req))
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const body = await req.json();
   const { data, error } = await supabaseAdmin

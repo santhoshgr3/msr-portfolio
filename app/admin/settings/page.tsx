@@ -1,9 +1,8 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { Save, Phone, Mail, Globe, MapPin, Camera, Play, Share2, AtSign, Send, MessageCircle, Briefcase } from 'lucide-react';
+import { Save, Phone, Mail, Globe, MapPin, Camera, Play, Share2, AtSign, Send, MessageCircle, Briefcase, Megaphone } from 'lucide-react';
 import { DEFAULT_SETTINGS, type SiteSettings } from '@/lib/supabase';
-
-const TOKEN = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'sunnyannaadmin2025';
+import { adminFetch } from '@/app/admin/layout';
 
 type FieldDef = { key: keyof SiteSettings; label: string; placeholder: string; icon: React.ReactNode };
 
@@ -46,9 +45,8 @@ export default function AdminSettingsPage() {
   const save = async () => {
     setSaving(true); setMsg(null);
     try {
-      const res = await fetch('/api/settings', {
+      const res = await adminFetch('/api/settings', {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'x-admin-token': TOKEN },
         body: JSON.stringify(settings),
       });
       const data = await res.json();
@@ -106,6 +104,24 @@ export default function AdminSettingsPage() {
           {msg.text}
         </div>
       )}
+
+      {/* Announcement */}
+      <div className="bg-white rounded-2xl border border-[#E8E8E8] p-5 sm:p-6 mb-5">
+        <h2 className="font-bold text-[#0D0D0D] mb-1">Announcement Bar</h2>
+        <p className="text-xs text-[#6B6B6B] mb-4">Text shown in the orange bar at the top of every page.</p>
+        <div>
+          <label className="block text-xs font-semibold text-[#6B6B6B] uppercase tracking-wide mb-1.5">Announcement Text</label>
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6B6B6B]"><Megaphone size={15} /></span>
+            <input
+              value={settings.announcement_text ?? ''}
+              onChange={e => set('announcement_text', e.target.value)}
+              placeholder="Join the movement transforming Telangana —"
+              className="w-full border border-[#E8E8E8] rounded-xl pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#FF6F00] transition-colors"
+            />
+          </div>
+        </div>
+      </div>
 
       {/* Contact */}
       <div className="bg-white rounded-2xl border border-[#E8E8E8] p-5 sm:p-6 mb-5">

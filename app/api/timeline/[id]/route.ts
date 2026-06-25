@@ -1,12 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { isAdmin } from '@/lib/admin-auth';
 import { supabaseAdmin } from '@/lib/supabase-admin';
 
-function auth(req: NextRequest) {
-  return req.headers.get('x-admin-token') === process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'sunnyannaadmin2025';
-}
-
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  if (!auth(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  if (!isAdmin(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const { id } = await params;
   const body = await req.json();
   const { data, error } = await supabaseAdmin
@@ -19,7 +16,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 }
 
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  if (!auth(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  if (!isAdmin(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const { id } = await params;
   const { error } = await supabaseAdmin.from('timeline_items').delete().eq('id', id);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });

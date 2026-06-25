@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Phone, Mail, Globe, Play, Camera, Share2, AtSign, Send, Briefcase } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useSettings } from '@/contexts/SettingsContext';
@@ -32,11 +33,15 @@ export default function Footer() {
     { href: '/gallery',   label: nav.gallery },
     { href: '/events',    label: nav.events },
     { href: '/blog',      label: nav.blog },
+    { href: '/media',     label: nav.media },
+    { href: '/contact',   label: nav.contact },
   ];
 
   const pillars = lang === 'te'
     ? ['⚡ యువత సాధికారత', '👩 మహిళా సాధికారత', '🏥 ఆరోగ్య సేవలు', '📚 విద్య']
     : ['⚡ Youth Empowerment', '👩 Women Empowerment', '🏥 Healthcare', '📚 Education'];
+
+  const pillarHrefs = ['/mission', '/mission', '/mission', '/mission'];
 
   return (
     <footer className="bg-[#0D0D0D] text-white">
@@ -47,14 +52,14 @@ export default function Footer() {
 
           {/* Brand */}
           <div className="lg:col-span-1">
-            <div className="flex items-center gap-3 mb-5">
-              <div className="w-10 h-10 rounded-full bg-[#FF6F00] flex items-center justify-center text-white font-black text-base shrink-0">
-                S
-              </div>
-              <div>
-                <div className="font-bold text-sm text-white">Dr. Madhiraj Sairathan</div>
-                <div className="text-[#FF6F00] text-xs">& Helping Hands Organization</div>
-              </div>
+            <div className="mb-5">
+              <Image
+                src="/logo.png"
+                alt="Madhiraj Sairathan"
+                width={180}
+                height={68}
+                className="h-14 w-auto object-contain brightness-0 invert"
+              />
             </div>
             <p className="text-white/40 text-sm leading-relaxed mb-6">
               {t.tagline}
@@ -87,8 +92,12 @@ export default function Footer() {
           <div>
             <h3 className="text-xs font-semibold text-[#FF6F00] uppercase tracking-widest mb-5">{t.pillars}</h3>
             <ul className="space-y-2.5">
-              {pillars.map(p => (
-                <li key={p} className="text-white/40 text-sm">{p}</li>
+              {pillars.map((p, i) => (
+                <li key={p}>
+                  <Link href={pillarHrefs[i]} className="text-white/40 hover:text-white text-sm transition-colors">
+                    {p}
+                  </Link>
+                </li>
               ))}
             </ul>
             <div className="mt-7">

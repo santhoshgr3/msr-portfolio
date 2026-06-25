@@ -62,6 +62,7 @@ export type GalleryItem = {
   image_url: string;
   storage_path: string;
   is_visible: boolean;
+  media_type: string; // 'image' | 'video'
   created_at: string;
 };
 
@@ -81,6 +82,7 @@ export type SiteSettings = {
   telegram_url: string;
   linkedin_url: string;
   whatsapp_community_url: string;
+  announcement_text: string;
   updated_at: string;
 };
 
@@ -101,6 +103,7 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   telegram_url: '',
   linkedin_url: '',
   whatsapp_community_url: '',
+  announcement_text: 'Join the movement transforming Telangana —',
   updated_at: '',
 };
 

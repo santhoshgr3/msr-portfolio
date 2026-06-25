@@ -23,7 +23,7 @@ export default function HorizontalPillars({ pillars, images = {} }: Props) {
   const stripRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [progress, setProgress] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 1024);
@@ -33,48 +33,54 @@ export default function HorizontalPillars({ pillars, images = {} }: Props) {
   }, []);
 
   useEffect(() => {
-    if (isMobile) return;
+    if (isMobile !== false) return;
 
     let ctx: { revert: () => void } | null = null;
 
     const init = async () => {
-      const { default: gsap } = await import('gsap');
-      const { ScrollTrigger } = await import('gsap/ScrollTrigger');
-      gsap.registerPlugin(ScrollTrigger);
+      try {
+        const { default: gsap } = await import('gsap');
+        const { ScrollTrigger } = await import('gsap/ScrollTrigger');
+        gsap.registerPlugin(ScrollTrigger);
 
-      const section = sectionRef.current;
-      const strip = stripRef.current;
-      if (!section || !strip) return;
+        const section = sectionRef.current;
+        const strip = stripRef.current;
+        if (!section || !strip) return;
 
-      ctx = gsap.context(() => {
-        gsap.to(strip, {
-          x: () => -(strip.scrollWidth - window.innerWidth),
-          ease: 'none',
-          scrollTrigger: {
-            trigger: section,
-            start: 'top top',
-            end: () => `+=${strip.scrollWidth - window.innerWidth}`,
-            scrub: 1.5,
-            pin: true,
-            anticipatePin: 1,
-            invalidateOnRefresh: true,
-            onUpdate: (self) => {
-              setProgress(self.progress);
-              setActiveIndex(
-                Math.min(
-                  pillars.length - 1,
-                  Math.floor(self.progress * pillars.length + 0.01)
-                )
-              );
+        ctx = gsap.context(() => {
+          gsap.to(strip, {
+            x: () => -(strip.scrollWidth - window.innerWidth),
+            ease: 'none',
+            scrollTrigger: {
+              trigger: section,
+              start: 'top top',
+              end: () => `+=${strip.scrollWidth - window.innerWidth}`,
+              scrub: 1.5,
+              pin: true,
+              anticipatePin: 1,
+              invalidateOnRefresh: true,
+              onUpdate: (self) => {
+                setProgress(self.progress);
+                setActiveIndex(
+                  Math.min(
+                    pillars.length - 1,
+                    Math.floor(self.progress * pillars.length + 0.01)
+                  )
+                );
+              },
             },
-          },
-        });
-      }, section);
+          });
+        }, section);
+      } catch {
+        // GSAP init failed — component will remain visible without animation
+      }
     };
 
     init();
     return () => { ctx?.revert(); };
   }, [isMobile, pillars.length]);
+
+  if (isMobile === null) return null;
 
   if (isMobile) {
     return (

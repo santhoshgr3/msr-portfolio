@@ -1,21 +1,20 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import {
   Lock, LayoutDashboard, Users, FileText, Calendar,
-  Image, BarChart3, MessageSquare, Mail, LogOut,
+  Image as ImageIcon, BarChart3, MessageSquare, Mail, LogOut,
   UserSquare2, Tv2, Settings, Menu, X, Layers,
 } from 'lucide-react';
-
-const ADMIN_PASS = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'sunnyannaadmin2025';
 
 const NAV = [
   { href: '/admin',               label: 'Overview',       icon: LayoutDashboard, exact: true },
   { href: '/admin/members',       label: 'Members',        icon: Users },
   { href: '/admin/blog',          label: 'Blog',           icon: FileText },
   { href: '/admin/events',        label: 'Events',         icon: Calendar },
-  { href: '/admin/gallery',       label: 'Gallery',        icon: Image },
+  { href: '/admin/gallery',       label: 'Gallery',        icon: ImageIcon },
   { href: '/admin/stats',         label: 'Statistics',     icon: BarChart3 },
   { href: '/admin/testimonials',  label: 'Testimonials',   icon: MessageSquare },
   { href: '/admin/about',         label: 'About Content',  icon: UserSquare2 },
@@ -41,19 +40,27 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname();
 
   useEffect(() => {
-    setAuthed(localStorage.getItem('admin_token') === ADMIN_PASS);
+    const token = localStorage.getItem('admin_token') || '';
+    if (!token) { setAuthed(false); return; }
+    fetch('/api/admin/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: token }) })
+      .then(r => setAuthed(r.ok))
+      .catch(() => setAuthed(false));
   }, []);
 
-  // Close the mobile drawer on navigation
   useEffect(() => { setNavOpen(false); }, [pathname]);
 
-  const login = () => {
-    if (password === ADMIN_PASS) {
-      localStorage.setItem('admin_token', ADMIN_PASS);
-      setAuthed(true);
-      setError('');
-    } else {
-      setError('Wrong password.');
+  const login = async () => {
+    setError('');
+    try {
+      const res = await fetch('/api/admin/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password }) });
+      if (res.ok) {
+        localStorage.setItem('admin_token', password);
+        setAuthed(true);
+      } else {
+        setError('Wrong password.');
+      }
+    } catch {
+      setError('Login failed. Try again.');
     }
   };
 
@@ -85,7 +92,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             placeholder="Enter admin password"
             value={password}
             onChange={e => setPassword(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && login()}
+            onKeyDown={e => e.key === 'Enter' && void login()}
             className="w-full border border-[#E8E8E8] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#FF6F00] mb-3 transition-colors"
             autoFocus
           />
@@ -105,11 +112,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <>
       <div className="p-4 border-b border-white/10 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 bg-[#FF6F00] rounded-lg flex items-center justify-center font-black text-sm text-white">S</div>
-          <div>
-            <div className="text-white text-xs font-bold">Admin Panel</div>
-            <div className="text-white/30 text-[10px]">Yuvasena CMS</div>
-          </div>
+          <Image src="/logo.png" alt="Logo" width={110} height={40} className="h-8 w-auto object-contain brightness-0 invert" />
         </div>
         <button onClick={() => setNavOpen(false)} className="lg:hidden text-white/50 hover:text-white p-1" aria-label="Close menu">
           <X size={18} />

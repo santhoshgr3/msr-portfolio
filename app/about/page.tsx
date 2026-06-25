@@ -26,10 +26,20 @@ export default function AboutPage() {
 
   const [timeline, setTimeline] = useState<{ id: number; year: string; title: string; description: string; highlight: boolean }[]>([]);
   const [team, setTeam] = useState<{ id: number; name: string; role: string; initial: string }[]>([]);
+  const [stats, setStats] = useState({ years_service: new Date().getFullYear() - 2018, districts_covered: 33, members: 0 });
 
   useEffect(() => {
     fetch('/api/timeline').then(r => r.json()).then(setTimeline).catch(() => {});
     fetch('/api/team').then(r => r.json()).then(setTeam).catch(() => {});
+    fetch('/api/stats').then(r => r.json()).then((rows: { key: string; value: number }[]) => {
+      const map: Record<string, number> = {};
+      rows.forEach((r) => { map[r.key] = r.value; });
+      setStats({
+        years_service: map.years_service ?? new Date().getFullYear() - 2018,
+        districts_covered: map.districts_covered ?? 33,
+        members: map.members ?? 0,
+      });
+    }).catch(() => {});
   }, []);
 
   const orgData = lang === 'te'
@@ -124,10 +134,10 @@ export default function AboutPage() {
         <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {[
-              { v: `${new Date().getFullYear() - 2018}+`, l: t.stats[0] },
+              { v: `${stats.years_service}+`, l: t.stats[0] },
               { v: '2', l: t.stats[1] },
               { v: '4', l: t.stats[2] },
-              { v: '33', l: t.stats[3] },
+              { v: `${stats.districts_covered}`, l: t.stats[3] },
             ].map((s, i) => (
               <div key={i}>
                 <div className="text-4xl font-black text-[#FF6F00] tabular-nums mb-1">{s.v}</div>
